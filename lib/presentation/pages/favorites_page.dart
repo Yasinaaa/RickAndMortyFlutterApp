@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/character_cubit.dart';
+import '../cubit/character_state.dart';
 import '../widgets/character_card.dart';
 
 class FavoritesPage extends StatelessWidget {
@@ -8,9 +9,7 @@ class FavoritesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Избранное')),
-      body: BlocBuilder<CharacterCubit, CharacterState>(
+    return BlocBuilder<CharacterCubit, CharacterState>(
         builder: (context, state) {
           final favorites = state.characters
               .where((char) => state.favorites.contains(char.id))
@@ -34,7 +33,6 @@ class FavoritesPage extends StatelessWidget {
             },
           );
         },
-      ),
     );
   }
 }

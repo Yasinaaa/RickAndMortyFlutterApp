@@ -1,5 +1,5 @@
-import '../entities/character.dart';
-import '../repositories/character_repository.dart';
+import 'character.dart';
+import 'character_repository.dart';
 
 class GetCharacters {
   final CharacterRepository repository;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/character_cubit.dart';
+import '../cubit/character_state.dart';
 import '../widgets/character_card.dart';
 
 class CharactersPage extends StatelessWidget {
@@ -8,9 +9,7 @@ class CharactersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Персонажи')),
-      body: BlocBuilder<CharacterCubit, CharacterState>(
+    return BlocBuilder<CharacterCubit, CharacterState>(
         builder: (context, state) {
           if (state.isLoading && state.characters.isEmpty) {
             return const Center(child: CircularProgressIndicator());
@@ -44,7 +43,6 @@ class CharactersPage extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 }

@@ -1,38 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/character.dart';
-import '../../domain/usecases/get_characters.dart';
-
-class CharacterState {
-  final List<Character> characters;
-  final Set<int> favorites;
-  final bool isLoading;
-  final int page;
-  final bool hasMore;
-
-  CharacterState({
-    required this.characters,
-    required this.favorites,
-    required this.isLoading,
-    required this.page,
-    required this.hasMore,
-  });
-
-  CharacterState copyWith({
-    List<Character>? characters,
-    Set<int>? favorites,
-    bool? isLoading,
-    int? page,
-    bool? hasMore,
-  }) {
-    return CharacterState(
-      characters: characters ?? this.characters,
-      favorites: favorites ?? this.favorites,
-      isLoading: isLoading ?? this.isLoading,
-      page: page ?? this.page,
-      hasMore: hasMore ?? this.hasMore,
-    );
-  }
-}
+import '../../domain/get_characters.dart';
+import 'character_state.dart';
 
 class CharacterCubit extends Cubit<CharacterState> {
   final GetCharacters getCharacters;

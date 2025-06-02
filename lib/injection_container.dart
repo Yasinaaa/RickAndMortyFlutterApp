@@ -1,27 +1,34 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
-import 'data/datasources/character_remote_datasource.dart';
-import 'data/repositories/character_repository_impl.dart';
-import 'domain/repositories/character_repository.dart';
-import 'domain/usecases/get_characters.dart';
+import 'core/utils/network_info.dart';
+import 'data/character_remote_datasource.dart';
+import 'data/character_repository_impl.dart';
+import 'domain/character_repository.dart';
+import 'domain/get_characters.dart';
 import 'presentation/cubit/character_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // Presentation
-  sl.registerFactory(() => CharacterCubit(sl()));
+  // External
+  sl.registerLazySingleton(() => Connectivity());
 
-  // Use Cases
-  sl.registerLazySingleton(() => GetCharacters(sl()));
-
-  // Repository
-  sl.registerLazySingleton<CharacterRepository>(
-          () => CharacterRepositoryImpl(sl()));
+  // Core
+  sl.registerLazySingleton<NetworkInfo>(
+          () => NetworkInfoImpl(sl<Connectivity>()));
 
   // Data sources
   sl.registerLazySingleton(() => CharacterRemoteDataSource());
 
-  // External
-  sl.registerLazySingleton(() => http.Client());
+  // Repository
+  sl.registerLazySingleton<CharacterRepository>(() => CharacterRepositoryImpl(
+    remoteDataSource: sl(),
+    networkInfo: sl(),
+  ));
+
+  // UseCase
+  sl.registerLazySingleton(() => GetCharacters(sl()));
+
+  // Cubit
+  sl.registerFactory(() => CharacterCubit(sl()));
 }

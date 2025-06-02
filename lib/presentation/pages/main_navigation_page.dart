@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../app.dart';
 import 'characters_page.dart';
 import 'favorites_page.dart';
 
@@ -10,25 +12,37 @@ class MainNavigationPage extends StatefulWidget {
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  int currentIndex = 0;
+  int index = 0;
+
+  final screens = const [
+    CharactersPage(),
+    FavoritesPage(),
+  ];
+
+  final titles = const [
+    'Персонажи',
+    'Избранное',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      const CharactersPage(),
-      const FavoritesPage(),
-    ];
-
     return Scaffold(
-      body: pages[currentIndex],
+      appBar: AppBar(
+        title: Text(titles[index]),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
+        ],
+      ),
+      body: screens[index],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
+        currentIndex: index,
+        onTap: (i) => setState(() => index = i),
         items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list), label: 'Персонажи'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star), label: 'Избранное'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Персонажи'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Избранное'),
         ],
       ),
     );
