@@ -1,0 +1,13 @@
+{
+  "@@locale": "ru",
+  "appTitle": "Рик и Морти",
+  "sortBy": "Сортировка:",
+  "byName": "По имени",
+  "byStatus": "По статусу",
+  "favorites": "Избранное",
+  "characters": "Персонажи",
+  "loadingError": "Ошибка загрузки",
+  "status": "Статус: {value}",
+  "species": "Вид: {value}",
+  "location": "Локация: {value}"
+}
