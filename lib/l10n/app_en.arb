@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "appTitle": "Rick & Morty",
+  "sortBy": "Sort by:",
+  "byName": "By name",
+  "byStatus": "By status",
+  "favorites": "Favorites",
+  "characters": "Characters",
+  "loadingError": "Failed to load characters",
+  "status": "Status: {value}",
+  "species": "Species: {value}",
+  "location": "Location: {value}"
+}

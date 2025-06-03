@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../pages/characters_page.dart';
+import '../pages/favorites_page.dart';
+import '../theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../app.dart';
-import 'characters_page.dart';
-import 'favorites_page.dart';
+import '../../l10n/app_localizations.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -12,23 +13,19 @@ class MainNavigationPage extends StatefulWidget {
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  int index = 0;
+  int _selectedIndex = 0;
 
-  final screens = const [
+  final List<Widget> _pages = const [
     CharactersPage(),
     FavoritesPage(),
   ];
 
-  final titles = const [
-    'Персонажи',
-    'Избранное',
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(titles[index]),
+        title: Text(localizations.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
@@ -36,14 +33,24 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
         ],
       ),
-      body: screens[index],
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        onTap: (i) => setState(() => index = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Персонажи'),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Избранное'),
+        currentIndex: _selectedIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: localizations.characters,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: localizations.favorites,
+          ),
         ],
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }

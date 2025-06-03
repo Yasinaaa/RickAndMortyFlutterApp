@@ -1,33 +1,31 @@
-import '../../domain/character.dart';
+part of 'character_cubit.dart';
 
-class CharacterState {
+abstract class CharacterState extends Equatable {
+  const CharacterState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CharacterInitial extends CharacterState {}
+
+class CharacterLoading extends CharacterState {}
+
+class CharacterLoaded extends CharacterState {
   final List<Character> characters;
   final Set<int> favorites;
-  final bool isLoading;
-  final int page;
-  final bool hasMore;
 
-  CharacterState({
-    required this.characters,
-    required this.favorites,
-    required this.isLoading,
-    required this.page,
-    required this.hasMore,
-  });
+  const CharacterLoaded(this.characters, this.favorites);
 
-  CharacterState copyWith({
-    List<Character>? characters,
-    Set<int>? favorites,
-    bool? isLoading,
-    int? page,
-    bool? hasMore,
-  }) {
-    return CharacterState(
-      characters: characters ?? this.characters,
-      favorites: favorites ?? this.favorites,
-      isLoading: isLoading ?? this.isLoading,
-      page: page ?? this.page,
-      hasMore: hasMore ?? this.hasMore,
-    );
-  }
+  @override
+  List<Object> get props => [characters, favorites];
+}
+
+class CharacterError extends CharacterState {
+  final String message;
+
+  const CharacterError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }

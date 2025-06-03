@@ -1,43 +1,72 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/get_characters.dart';
-import 'character_state.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../../domain/character.dart';
+import '../../../domain/get_characters.dart';
+
+part 'character_state.dart';
 
 class CharacterCubit extends Cubit<CharacterState> {
   final GetCharacters getCharacters;
 
-  CharacterCubit(this.getCharacters)
-      : super(CharacterState(
-    characters: [],
-    favorites: <int>{},
-    isLoading: false,
-    page: 1,
-    hasMore: true,
-  ));
+  int _currentPage = 1;
+  bool _hasMore = true;
+  bool _isLoadingMore = false;
+
+  final List<Character> _characters = [];
+  final Set<int> _favoriteIds = {};
+
+  CharacterCubit(this.getCharacters) : super(CharacterInitial());
+
+  Future<void> loadInitial() async {
+    emit(CharacterLoading());
+    _currentPage = 1;
+    _hasMore = true;
+    _characters.clear();
+
+    try {
+      final result = await getCharacters(_currentPage);
+      _characters.addAll(result);
+      emit(CharacterLoaded(List.of(_characters), Set.of(_favoriteIds)));
+    } catch (e) {
+      emit(CharacterError('Failed to load characters'));
+    }
+  }
 
   Future<void> loadMore() async {
-    if (state.isLoading || !state.hasMore) return;
+    if (!_hasMore || _isLoadingMore) return;
+    _isLoadingMore = true;
+    _currentPage++;
 
-    emit(state.copyWith(isLoading: true));
     try {
-      final newCharacters = await getCharacters(state.page);
-      emit(state.copyWith(
-        characters: [...state.characters, ...newCharacters],
-        page: state.page + 1,
-        isLoading: false,
-        hasMore: newCharacters.isNotEmpty,
-      ));
-    } catch (e) {
-      emit(state.copyWith(isLoading: false));
+      final result = await getCharacters(_currentPage);
+      if (result.isEmpty) {
+        _hasMore = false;
+      } else {
+        _characters.addAll(result);
+        emit(CharacterLoaded(List.of(_characters), Set.of(_favoriteIds)));
+      }
+    } catch (_) {
+      _hasMore = false;
     }
+
+    _isLoadingMore = false;
   }
 
-  void toggleFavorite(int id) {
-    final updatedFavorites = Set<int>.from(state.favorites);
-    if (updatedFavorites.contains(id)) {
-      updatedFavorites.remove(id);
+  void toggleFavorite(Character character) {
+    if (_favoriteIds.contains(character.id)) {
+      _favoriteIds.remove(character.id);
     } else {
-      updatedFavorites.add(id);
+      _favoriteIds.add(character.id);
     }
-    emit(state.copyWith(favorites: updatedFavorites));
+
+    emit(CharacterLoaded(List.of(_characters), Set.of(_favoriteIds)));
   }
+
+  List<Character> get favorites => _characters
+      .where((c) => _favoriteIds.contains(c.id))
+      .toList();
+
+  bool isFavorite(Character character) =>
+      _favoriteIds.contains(character.id);
 }

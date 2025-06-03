@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/character.dart';
+import '../../l10n/app_localizations.dart';
 
 class CharacterCard extends StatefulWidget {
   final Character character;
@@ -50,6 +51,7 @@ class _CharacterCardState extends State<CharacterCard>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: ListTile(
@@ -58,9 +60,9 @@ class _CharacterCardState extends State<CharacterCard>
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Status: ${widget.character.status}'),
-            Text('Species: ${widget.character.species}'),
-            Text('Location: ${widget.character.location}'),
+            Text(localizations.status(widget.character.status)),
+            Text(localizations.species(widget.character.species)),
+            Text(localizations.location(widget.character.location)),
           ],
         ),
         trailing: ScaleTransition(
